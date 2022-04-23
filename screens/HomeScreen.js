@@ -9,19 +9,23 @@ import {
 
 import EntranceButtons from "../UI/EntranceButtons";
 
-function HomeScreen(props) {
+function HomeScreen({ navigation, route }) {
   console.log("Home Screen");
 
-  const onPressHandler = () => {
-    console.log("Pressed");
+  const clinicianOnPressHandler = () => {
+    navigation.navigate("ClinicianScreen");
+  };
+
+  const nonClinicianOnPressHandler = () => {
+    navigation.navigate("Non-ClinicianScreen");
   };
 
   return (
     <View style={styles.container}>
-      <EntranceButtons onPress={onPressHandler}>
+      <EntranceButtons onPress={clinicianOnPressHandler}>
         Clinician Entrance
       </EntranceButtons>
-      <EntranceButtons onPress={onPressHandler}>
+      <EntranceButtons onPress={nonClinicianOnPressHandler}>
         Non-Clinician Entrance
       </EntranceButtons>
     </View>

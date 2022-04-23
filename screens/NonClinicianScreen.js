@@ -1,21 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
-import ClinicianForm from "../components/Forms/ClinicianForm";
 
-function ClinicianScreen() {
+function NonClinicianScreen() {
   return (
     <View style={styles.container}>
-      <ClinicianForm />
+      <Text>Non Clinician Screen!!</Text>
     </View>
   );
 }
 
+export default NonClinicianScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
-
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#91d1db",
   },
 });
-
-export default ClinicianScreen;

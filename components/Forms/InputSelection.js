@@ -15,14 +15,13 @@ function InputSelection({ label, textInputConfig, options }) {
         style={{
           backgroundColor: "#2b80c5",
           padding: 6,
-          borderRadius: 6,
+          borderRadius: 4,
           fontSize: 18,
           alignItems: "center",
         }}
         containerStyle={{
           backgroundColor: "#a5cff2",
         }}
-        placeholder="Select Value"
         placeholderStyle={{
           color: "#bc8585",
           fontSize: 15,

@@ -1,13 +1,16 @@
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
-function InputText({ label, textInputConfig }) {
+function InputText({ label, invalid, textInputConfig }) {
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, invalid && styles.invalidLabel]}>
+        {label}
+      </Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, invalid && styles.invalidInput]}
         {...textInputConfig}
         textAlign="center"
+        placeholderTextColor="#483d3db6"
       ></TextInput>
     </View>
   );
@@ -31,6 +34,12 @@ const styles = StyleSheet.create({
     color: "#032f53",
     padding: 6,
     borderRadius: 4,
-    fontSize: 14,
+    fontSize: 15,
+  },
+  invalidLabel: {
+    color: "red",
+  },
+  invalidInput: {
+    backgroundColor: "#ec7d7d",
   },
 });

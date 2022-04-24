@@ -1,10 +1,13 @@
 import { View, Text, StyleSheet } from "react-native";
 import SelectPicker from "react-native-form-select-picker"; // Import the package
 
-function InputSelection({ label, textInputConfig, options }) {
+function InputSelection({ label, invalid, textInputConfig, options }) {
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+      {/* Additional styles incase of input is invalid */}
+      <Text style={[styles.label, invalid && styles.invalidLabel]}>
+        {label}
+      </Text>
 
       <SelectPicker
         {...textInputConfig}
@@ -13,18 +16,18 @@ function InputSelection({ label, textInputConfig, options }) {
         }}
         doneButtonText="Done"
         style={{
-          backgroundColor: "#2b80c5",
+          backgroundColor: invalid ? "#ec7d7d" : "#2b80c5",
           padding: 6,
           borderRadius: 4,
-          fontSize: 18,
+
           alignItems: "center",
         }}
         containerStyle={{
           backgroundColor: "#a5cff2",
         }}
         placeholderStyle={{
-          color: "#bc8585",
-          fontSize: 15,
+          color: "#483d3db6",
+          fontSize: 16,
         }}
         titleTextStyle={{
           textAlign: "center",
@@ -34,7 +37,7 @@ function InputSelection({ label, textInputConfig, options }) {
         }}
         onSelectedStyle={{
           color: "#032f53",
-          fontSize: 18,
+          fontSize: 15,
         }}
       >
         {options.map((val, key) => (
@@ -57,5 +60,12 @@ const styles = StyleSheet.create({
     color: "white",
     marginBottom: 4,
     alignSelf: "center",
+  },
+
+  invalidLabel: {
+    color: "red",
+  },
+  invalidInput: {
+    backgroundColor: "#f52b2b",
   },
 });

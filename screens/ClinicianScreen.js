@@ -12,8 +12,7 @@ function ClinicianScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 50,
-
+    padding: 12,
     backgroundColor: "#91d1db",
   },
 });

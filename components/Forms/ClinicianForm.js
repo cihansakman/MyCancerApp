@@ -377,7 +377,10 @@ function ClinicianForm() {
         )}
 
         <View style={styles.buttonContainer}>
-          <EntranceButtons onPress={onCalculateButtonHandler}>
+          <EntranceButtons
+            style={styles.calculateButton}
+            onPress={onCalculateButtonHandler}
+          >
             Calculate Risk
           </EntranceButtons>
         </View>
@@ -406,5 +409,8 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 10,
     padding: 5,
+  },
+  calculateButton: {
+    width: "50%",
   },
 });

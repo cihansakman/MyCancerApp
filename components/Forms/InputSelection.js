@@ -43,8 +43,8 @@ function InputSelection({ label, invalid, textInputConfig, options }) {
             fontSize: 15,
           }}
         >
-          {options.map((val, key) => (
-            <SelectPicker.Item label={val} value={val} key={val} />
+          {options.map((val) => (
+            <SelectPicker.Item label={val} value={val} key={label + val} />
           ))}
         </SelectPicker>
       </View>

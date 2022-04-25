@@ -1,8 +1,8 @@
 import { Text, Pressable, StyleSheet } from "react-native";
 
-function EntranceButtons({ children, onPress }) {
+function EntranceButtons({ children, onPress, style }) {
   return (
-    <Pressable onPress={onPress} style={styles.appButtonContainer}>
+    <Pressable onPress={onPress} style={[styles.appButtonContainer, style]}>
       <Text style={styles.appButtonText}>{children}</Text>
     </Pressable>
   );
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    width: "50%",
+    width: "75%",
     height: 40,
     margin: 4,
   },

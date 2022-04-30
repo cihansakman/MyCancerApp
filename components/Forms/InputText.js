@@ -13,7 +13,7 @@ function InputText({ label, invalid, textInputConfig }) {
           style={[styles.input, invalid && styles.invalidInput]}
           {...textInputConfig}
           textAlign="center"
-          placeholderTextColor="#483d3db6"
+          placeholderTextColor="#ffffffff"
         ></TextInput>
       </View>
 
@@ -27,19 +27,20 @@ export default InputText;
 const styles = StyleSheet.create({
   inputContainer: {
     marginHorizontal: 4,
-    marginVertical: 4,
+    marginVertical: 6,
     flex: 1,
     flexDirection: "row",
   },
   label: {
     fontSize: 16,
-    color: "white",
+    color: "#040404",
     marginBottom: 4,
-    alignSelf: "center",
+    // alignSelf: "center",
   },
   input: {
-    backgroundColor: "#2b80c5",
-    color: "#032f53",
+    // backgroundColor: "#2b80c5",
+    backgroundColor: "#44a909ff",
+    color: "#191511",
     padding: 6,
     borderRadius: 4,
     fontSize: 15,

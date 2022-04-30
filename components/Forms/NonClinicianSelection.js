@@ -1,13 +1,14 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import axios from "axios";
 
 function NonClinicianSelection({ children }) {
   return (
     <Pressable
       android_ripple={{ color: "gray" }}
       style={styles.container}
-      onPress={() => {
-        console.log("Pressed");
+      onPress={async () => {
+        console.log("Non-Clinician Pressed");
       }}
     >
       <Text style={styles.text}>{children}</Text>

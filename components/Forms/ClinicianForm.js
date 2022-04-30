@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  SafeAreaView,
   View,
   StyleSheet,
   Text,
@@ -11,65 +10,30 @@ import InputSelection from "./InputSelection";
 import InputText from "./InputText";
 import EntranceButtons from "../../UI/EntranceButtons";
 import { Alert } from "react-native";
+import axios from "axios";
+
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+//import actions which we need to use
+import {
+  setPrediction,
+  setPredictionScores,
+} from "../../store/redux/predictions";
+
+const utils = require("../../utils");
 
 //Selections for InputSelection Forms
-const cancerTypes = ["Lung Adenocarcinoma", "Lung Squamos Cell Carcinoma"];
-const gender = ["Male", "Female"];
-const tumor_stage = ["1", "2", "3", "4"];
-const site_of_resection = [
-  "Upper lobe, Lung",
-  "Lower lobe, Lung",
-  "Middle lobe, Lung",
-  "Lung, NOS",
-  "Overlapping lesion of Lung",
-  "Main bronchus",
-];
-const primary_diagnosis_luad = [
-  "Adenocarcinoma, NOS",
-  "Adenocarcinoma with mixed subtypes",
-  "Acinar cell carcinoma",
-  "Papillary adenocarcinoma, NOS",
-  "Bronchiolo-alveolar carcinoma, non-mucinous",
-  "Mucinous adenocarcinoma",
-  "Solid carcinoma, NOS",
-  "Bronchio-alveolar carcinoma, mucinous",
-  "Micropapillary carcinoma, NOS",
-  "Bronchiolo-alveolar adenocarcinoma, NOS",
-  "Clear cell adenocarcinoma, NOS",
-  "Signet ring cell carcinoma",
-];
-const primary_diagnosis_lusc = [
-  "Squamous cell carcinoma, NOS",
-  "Basaloid squamous cell carcinoma",
-  "Squamous cell carcinoma, keratinizing, NOS",
-  "Papillary squamous cell carcinoma",
-  "Squamous cell carcinoma, large cell, nonkeratinizing, NOS",
-  "Squamous cell carcinoma, small cell, nonkeratinizing",
-];
-const morphology_luad = [
-  "8140",
-  "8255",
-  "8550",
-  "8260",
-  "8252",
-  "8480",
-  "8230",
-  "8253",
-  "8250",
-  "8265",
-  "8310",
-  "8490",
-];
-const morphology_lusc = ["8070", "8083", "8071", "8052", "8072", "8073"];
-const race_luad = [
-  "Other",
-  "American Indian or Alaska Native",
-  "Asian",
-  "Black or African American",
-  "White",
-];
+const cancerTypes = utils.cancerTypes;
+const gender = utils.gender;
+const tumor_stage = utils.tumor_stage;
+const site_of_resection = utils.site_of_resection;
+const primary_diagnosis_luad = utils.primary_diagnosis_luad;
+const primary_diagnosis_lusc = utils.primary_diagnosis_lusc;
+const morphology_luad = utils.morphology_luad;
+const morphology_lusc = utils.morphology_lusc;
+const race_luad = utils.race_luad;
 
-function ClinicianForm() {
+function ClinicianForm({ navigation }) {
   //We'll keep all inputs into one object and update them with only one handler function.
   //We'll keep each input as an object such as the value of input and the info about if the input is valid or not(validation is important for the error messages)
   const [inputValues, setInputValues] = useState({
@@ -84,7 +48,24 @@ function ClinicianForm() {
     race: { value: "Other", isValid: true },
   });
 
-  console.log(inputValues.age.value, inputValues.age.isValid);
+  //In order to use the actions we need dispatch
+  const dispatch = useDispatch();
+
+  //Keep the prediction results
+  const [riskPrediction, setRiskPrediction] = useState("Default");
+  //Keep the ratio of the prediction
+  const [riskPredictionRatios, setRiskPredictionRatios] = useState([]);
+
+  useEffect(() => {
+    //Update the predictionScore and predictionScoreRatios in the Redux store
+    dispatch(setPrediction({ predictionRisk: riskPrediction }));
+    dispatch(setPredictionScores({ predictionScores: riskPredictionRatios }));
+    console.log(
+      "Use Effect activated\n",
+      riskPrediction,
+      riskPredictionRatios[0]
+    );
+  }, [riskPrediction, riskPredictionRatios]);
 
   //We'll update inputs when some input proporties selected or entered.
   function inputChangeHandler(inputIdentifier, value) {
@@ -141,12 +122,16 @@ function ClinicianForm() {
         ? ""
         : parseInt(inputValues.cigarettes_per_day.value),
       tumor_stage: parseInt(inputValues.tumor_stage.value),
-      cancer_type: inputValues.cancer_type.value,
+      cancer_type:
+        inputValues.cancer_type.value === "Lung Adenocarcinoma" ? 0 : 1, //Luad is 0, Lusc is 1
       site_of_resection: inputValues.site_of_resection.value,
-      gender: inputValues.gender.value,
+      gender: inputValues.gender.value === "Female" ? 0 : 1, //If Female index 0 if Male index 1
       primary_diagnosis: inputValues.primary_diagnosis.value,
-      morphology: inputValues.morphology.value,
-      race: inputValues.race.value,
+      morphology: inputValues.morphology.value + "/3",
+      race:
+        inputValues.race.value === "Other"
+          ? "unknown"
+          : inputValues.race.value.toLowerCase(), //If Other choosen we need to transform it into unknown. Because in our ML we keep it as unknown.
     };
 
     const isAgeValid =
@@ -179,7 +164,24 @@ function ClinicianForm() {
       isRaceValid &&
       isMorphologyValid
     ) {
-      onSubmit(submittedValues);
+      const days_to_birth = -submittedValues.age;
+      const gender = 0;
+      const morphology = "8140/3";
+      const primary_diagnosis = "Mucinous adenocarcinoma";
+      const site_of_resection_or_biopsy = "Lower lobe, lung";
+      const disease = 0;
+      const race = "asian";
+
+      onSubmit(
+        submittedValues.tumor_stage,
+        submittedValues.age,
+        submittedValues.gender,
+        submittedValues.cancer_type,
+        submittedValues.primary_diagnosis,
+        submittedValues.morphology,
+        submittedValues.site_of_resection,
+        submittedValues.race
+      );
     } else {
       Alert.alert("Invalid input", "Please check the inputs!");
       setInputValues((curInputValues) => {
@@ -225,15 +227,71 @@ function ClinicianForm() {
   }
 
   //Helper function for Calculate Risk button
-  function onSubmit(submittedValues) {
-    //Should navigate to the result screen!
-    console.log(submittedValues);
+  async function onSubmit(
+    tumor_stage,
+    age,
+    gender,
+    cancer_type,
+    primary_diagnosis,
+    morphology,
+    site_of_resection_or_biopsy,
+    race
+  ) {
+    setRiskPrediction("Scoring");
+    try {
+      // const res = await axios.post("http://192.168.1.205:5000/api/wml/score/", {
+      //   tumor_stage: tumor_stage,
+      //   age_at_diagnosis: age,
+      //   days_to_birth: -age,
+      //   gender: gender,
+      //   disease: cancer_type,
+      //   primary_diagnosis: primary_diagnosis,
+      //   morphology: morphology,
+      //   site_of_resection_or_biopsy: site_of_resection_or_biopsy,
+      //   race: race,
+      // });
+
+      await axios
+        .post("http://192.168.1.205:5000/api/wml/score/", {
+          tumor_stage: tumor_stage,
+          age_at_diagnosis: age,
+          days_to_birth: -age,
+          gender: gender,
+          disease: cancer_type,
+          primary_diagnosis: primary_diagnosis,
+          morphology: morphology,
+          site_of_resection_or_biopsy: site_of_resection_or_biopsy,
+          race: race,
+        })
+        .then((res) => {
+          //Set Risk Prediction as 0 High Risk, 1 Low Risk
+          setRiskPrediction(
+            res.data.predictions[0].values[0][0] === 0
+              ? "High Risk"
+              : "Low Risk"
+          );
+
+          setRiskPredictionRatios([
+            ...riskPredictionRatios,
+            res.data.predictions[0].values[0][1],
+          ]);
+        });
+
+      Alert.alert("Risk Status", riskPrediction);
+      console.log("Predictions", riskPrediction, riskPredictionRatios);
+      //console.log(res.data.predictions[0].values[0][0]);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   //Helper variable to check if Cancer Type Entered or not
   const isCancerTypeEntered = !isNullValue(inputValues.cancer_type.value);
   //Helper variable to check if Cancer Type is LUAD or not
   const isCancerLUAD = inputValues.cancer_type.value === "Lung Adenocarcinoma";
+  //Helper variable to check if Cancer Type is LUSC or not
+  const isCancerLUSC =
+    inputValues.cancer_type.value === "Lung Squamos Cell Carcinoma";
 
   return (
     <KeyboardAvoidingView
@@ -282,7 +340,7 @@ function ClinicianForm() {
           ></InputText>
         )}
 
-        {isCancerTypeEntered && (
+        {isCancerLUSC && (
           <InputText
             label="Cigarettes Per Day"
             invalid={!inputValues.cigarettes_per_day.isValid}

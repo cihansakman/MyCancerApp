@@ -19,7 +19,8 @@ function InputSelection({ label, invalid, textInputConfig, options }) {
           }}
           doneButtonText="Done"
           style={{
-            backgroundColor: invalid ? "#ec7d7d" : "#2b80c5",
+            backgroundColor: invalid ? "#ec7d7d" : "#44a909ff",
+            // backgroundColor: invalid ? "#ec7d7d" : "#2b80c5",
             padding: 8,
             borderRadius: 4,
 
@@ -29,7 +30,8 @@ function InputSelection({ label, invalid, textInputConfig, options }) {
             backgroundColor: "#a5cff2",
           }}
           placeholderStyle={{
-            color: "#483d3db6",
+            // color: "#483d3db6",
+            color: "#ffffffff",
             fontSize: 15,
           }}
           titleTextStyle={{
@@ -39,7 +41,9 @@ function InputSelection({ label, invalid, textInputConfig, options }) {
             fontSize: 18,
           }}
           onSelectedStyle={{
-            color: "#032f53",
+            // color: "#032f53",
+            //color: "#614124",
+            color: "#191511",
             fontSize: 15,
           }}
         >
@@ -58,15 +62,14 @@ export default InputSelection;
 const styles = StyleSheet.create({
   inputContainer: {
     marginHorizontal: 4,
-    marginVertical: 4,
+    marginVertical: 6,
     flex: 1,
     flexDirection: "row",
   },
   label: {
     fontSize: 16,
-    color: "white",
+    color: "#040404",
     marginBottom: 4,
-    alignSelf: "center",
   },
 
   invalidLabel: {

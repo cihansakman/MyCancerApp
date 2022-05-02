@@ -253,7 +253,7 @@ function ClinicianScreen({ navigation }) {
     try {
       //Send POST request to model
       await axios
-        .post("http://192.168.56.1:5000/api/wml/score/", {
+        .post("http://192.168.1.205:5000/api/wml/score/", {
           tumor_stage: tumor_stage,
           age_at_diagnosis: age,
           days_to_birth: -age,
@@ -273,6 +273,46 @@ function ClinicianScreen({ navigation }) {
           );
 
           setRiskPredictionRatios([res.data.predictions[0].values[0][1]]);
+
+          //Clear the inputs
+          setInputValues((curInputValues) => {
+            return {
+              age: { value: "", isValid: true },
+              cigarettes_per_day: {
+                value: "",
+                isValid: true,
+              },
+
+              tumor_stage: {
+                value: "",
+                isValid: true,
+              },
+              cancer_type: {
+                value: "",
+                isValid: true,
+              },
+              gender: {
+                value: "",
+                isValid: true,
+              },
+              site_of_resection: {
+                value: "",
+                isValid: true,
+              },
+              primary_diagnosis: {
+                value: "",
+                isValid: true,
+              },
+              morphology: {
+                value: "",
+                isValid: true,
+              },
+              race: {
+                value: "Other",
+                isValid: true,
+              },
+            };
+          });
         });
       //console.log(res.data.predictions[0].values[0][0]);
     } catch (error) {

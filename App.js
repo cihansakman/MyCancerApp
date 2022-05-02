@@ -8,7 +8,7 @@ import ClinicianScreen from "./screens/ClinicianScreens/ClinicianScreen";
 import NonClinicianScreen from "./screens/NonClinicianScreens/NonClinicianScreen";
 import ResultScreen from "./screens/ClinicianScreens/ResultScreen";
 import GeneralInfoScreen from "./screens/NonClinicianScreens/GeneralInfoScreen";
-
+import TreatmentMethodsScreen from "./screens/NonClinicianScreens/TreatmentMethodsScreen";
 //Redux
 import { Provider } from "react-redux";
 import { store } from "./store/redux/store";
@@ -24,22 +24,50 @@ export default function App() {
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
-              headerStyle: { backgroundColor: "#b6c0c2" }, //#5a929e
-              headerTintColor: "white",
+              headerStyle: { backgroundColor: "#f6fbfc" }, //#5a929e
+              headerTintColor: "#44a909ff",
               headerTitleAlign: "center",
               contentStyle: { backgroundColor: "#bfd4bb" }, //The actual screen of the content
             }}
           >
             <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="ClinicianScreen" component={ClinicianScreen} />
+            <Stack.Screen
+              name="ClinicianScreen"
+              component={ClinicianScreen}
+              options={{
+                title: "Prediction Tool",
+              }}
+            />
             <Stack.Screen
               name="Non-ClinicianScreen"
               component={NonClinicianScreen}
+              options={{
+                title: "Lung Cancer",
+                headerTintColor: "#6fbbc7",
+              }}
             />
-            <Stack.Screen name="RiskScorePage" component={ResultScreen} />
+            <Stack.Screen
+              name="RiskScorePage"
+              component={ResultScreen}
+              options={{
+                title: "Prediction Result",
+              }}
+            />
             <Stack.Screen
               name="GeneralInfoScreen"
               component={GeneralInfoScreen}
+              options={{
+                title: "Lung Cancer Information",
+                headerTintColor: "#6fbbc7",
+              }}
+            />
+            <Stack.Screen
+              name="TreatmentMethodsScreen"
+              component={TreatmentMethodsScreen}
+              options={{
+                title: "Treatment Methods",
+                headerTintColor: "#6fbbc7",
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>

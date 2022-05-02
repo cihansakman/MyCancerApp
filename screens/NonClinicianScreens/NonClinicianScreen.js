@@ -1,19 +1,30 @@
 import { View, Text, StyleSheet } from "react-native";
 import NonClinicianSelection from "../../components/Forms/NonClinicianSelection";
 import Header from "../../UI/Header";
+import { Linking } from "react-native";
 
 function NonClinicianScreen({ navigation }) {
+  const generalInfoHandler = () => {
+    navigation.navigate("GeneralInfoScreen");
+  };
+  const treatmentMethodsHandler = () => {
+    navigation.navigate("TreatmentMethodsScreen");
+  };
+  const cancerSupportHandler = () => {
+    Linking.openURL("https://www.cancersupportcommunity.org/");
+  };
+
   return (
     <View style={styles.container}>
-      <Header style={styles.header}>Non Clinician Screen!!</Header>
-      <NonClinicianSelection>
+      <NonClinicianSelection onPress={generalInfoHandler}>
         General Information About Lung Cancer
       </NonClinicianSelection>
-      <NonClinicianSelection>Drug Search</NonClinicianSelection>
-      <NonClinicianSelection>
+      <NonClinicianSelection onPress={treatmentMethodsHandler}>
         Lung Cancer Treatment Methods
       </NonClinicianSelection>
-      <NonClinicianSelection>Cancer Support Page</NonClinicianSelection>
+      <NonClinicianSelection onPress={cancerSupportHandler}>
+        Cancer Support Page
+      </NonClinicianSelection>
     </View>
   );
 }
@@ -23,6 +34,7 @@ export default NonClinicianScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 4,
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#91d1db",
   },

@@ -3,7 +3,11 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 function NonClinicianSelection({ children, onPress }) {
   return (
-    <Pressable android_ripple={{ color: "gray" }} style={styles.container}>
+    <Pressable
+      onPress={onPress}
+      android_ripple={{ color: "gray" }}
+      style={styles.container}
+    >
       <Text style={styles.text}>{children}</Text>
       <Icon name="chevron-forward-outline" size={30} color="black" />
     </Pressable>

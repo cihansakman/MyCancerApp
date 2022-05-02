@@ -1,11 +1,4 @@
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import { View, StyleSheet } from "react-native";
 
 import EntranceButtons from "../UI/EntranceButtons";
 
@@ -39,6 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#91d1db",
+    //backgroundColor: "#91d1db",
+    backgroundColor: "#e2f3f3",
   },
 });

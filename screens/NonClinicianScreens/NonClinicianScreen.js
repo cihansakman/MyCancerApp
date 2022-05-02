@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from "react-native";
-import NonClinicianSelection from "../components/Forms/NonClinicianSelection";
-import Header from "../UI/Header";
+import NonClinicianSelection from "../../components/Forms/NonClinicianSelection";
+import Header from "../../UI/Header";
 
-function NonClinicianScreen() {
+function NonClinicianScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Header style={styles.header}>Non Clinician Screen!!</Header>

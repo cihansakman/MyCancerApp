@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 import {
+  Dimensions,
+  Image,
   View,
   StyleSheet,
   Text,
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import InputSelection from "../components/Forms/InputSelection";
-import InputText from "../components/Forms/InputText";
-import EntranceButtons from "../UI/EntranceButtons";
+import InputSelection from "../../components/Forms/InputSelection";
+import InputText from "../../components/Forms/InputText";
+import EntranceButtons from "../../UI/EntranceButtons";
 import { Alert } from "react-native";
 import axios from "axios";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 //import actions which we need to use
-import { setPrediction, setPredictionScores } from "../store/redux/predictions";
+import {
+  setPrediction,
+  setPredictionScores,
+} from "../../store/redux/predictions";
 
-const utils = require("../utils");
+const utils = require("../../utils");
 
 //Selections for InputSelection Forms
 const cancerTypes = utils.cancerTypes;
@@ -125,11 +130,22 @@ function ClinicianScreen({ navigation }) {
         : parseInt(inputValues.cigarettes_per_day.value),
       tumor_stage: parseInt(inputValues.tumor_stage.value),
       cancer_type:
-        inputValues.cancer_type.value === "Lung Adenocarcinoma" ? 0 : 1, //Luad is 0, Lusc is 1
+        inputValues.cancer_type.value === "Lung Adenocarcinoma"
+          ? 0
+          : inputValues.cancer_type.value === "Lung Squamos Cell Carcinoma"
+          ? 1
+          : "", //Luad is 0, Lusc is 1 otherwise null
       site_of_resection: inputValues.site_of_resection.value,
-      gender: inputValues.gender.value === "Female" ? 0 : 1, //If Female index 0 if Male index 1
+      gender:
+        inputValues.gender.value === "Female"
+          ? 0
+          : inputValues.gender.value === "Male"
+          ? 1
+          : "", //If Female index 0 if Male index 1
       primary_diagnosis: inputValues.primary_diagnosis.value,
-      morphology: inputValues.morphology.value + "/3",
+      morphology: isNullValue(inputValues.morphology.value)
+        ? ""
+        : inputValues.morphology.value + "/3",
       race:
         inputValues.race.value === "Other"
           ? "unknown"
@@ -137,8 +153,8 @@ function ClinicianScreen({ navigation }) {
     };
 
     const isAgeValid =
-      isNullValue(submittedValues.age) ||
-      (!isNaN(submittedValues.age) && submittedValues.age > 0); //Can be empty
+      // isNullValue(submittedValues.age) ||
+      !isNaN(submittedValues.age) && submittedValues.age > 0; //Can be empty
     const isCigarettesPerDayValid =
       isNullValue(submittedValues.cigarettes_per_day) ||
       (!isNaN(submittedValues.cigarettes_per_day) &&
@@ -166,14 +182,6 @@ function ClinicianScreen({ navigation }) {
       isRaceValid &&
       isMorphologyValid
     ) {
-      const days_to_birth = -submittedValues.age;
-      const gender = 0;
-      const morphology = "8140/3";
-      const primary_diagnosis = "Mucinous adenocarcinoma";
-      const site_of_resection_or_biopsy = "Lower lobe, lung";
-      const disease = 0;
-      const race = "asian";
-
       onSubmit(
         submittedValues.tumor_stage,
         submittedValues.age,
@@ -241,21 +249,11 @@ function ClinicianScreen({ navigation }) {
     race
   ) {
     setRiskPrediction("Scoring...");
-    try {
-      // const res = await axios.post("http://192.168.1.205:5000/api/wml/score/", {
-      //   tumor_stage: tumor_stage,
-      //   age_at_diagnosis: age,
-      //   days_to_birth: -age,
-      //   gender: gender,
-      //   disease: cancer_type,
-      //   primary_diagnosis: primary_diagnosis,
-      //   morphology: morphology,
-      //   site_of_resection_or_biopsy: site_of_resection_or_biopsy,
-      //   race: race,
-      // });
 
+    try {
+      //Send POST request to model
       await axios
-        .post("http://192.168.1.205:5000/api/wml/score/", {
+        .post("http://192.168.56.1:5000/api/wml/score/", {
           tumor_stage: tumor_stage,
           age_at_diagnosis: age,
           days_to_birth: -age,
@@ -274,10 +272,7 @@ function ClinicianScreen({ navigation }) {
               : "Low Risk"
           );
 
-          setRiskPredictionRatios([
-            ...riskPredictionRatios,
-            res.data.predictions[0].values[0][1],
-          ]);
+          setRiskPredictionRatios([res.data.predictions[0].values[0][1]]);
         });
       //console.log(res.data.predictions[0].values[0][0]);
     } catch (error) {
@@ -458,6 +453,8 @@ function ClinicianScreen({ navigation }) {
   );
 }
 
+const deviceWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
@@ -468,7 +465,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#91d1db",
+    backgroundColor: "#e2f3f3",
   },
   scrollView: {
     flex: 1,
@@ -488,6 +485,19 @@ const styles = StyleSheet.create({
   },
   calculateButton: {
     width: "50%",
+  },
+  imageContainer: {
+    borderRadius: deviceWidth < 380 ? 150 : 100,
+    width: deviceWidth < 380 ? 300 : 200,
+    height: deviceWidth < 380 ? 300 : 200,
+    borderWidth: 3,
+    borderColor: "black",
+    overflow: "hidden",
+    margin: 36,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });
 

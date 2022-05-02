@@ -4,9 +4,10 @@ import HomeScreen from "./screens/HomeScreen";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ClinicianScreen from "./screens/ClinicianScreen";
-import NonClinicianScreen from "./screens/NonClinicianScreen";
-import ResultScreen from "./screens/ResultScreen";
+import ClinicianScreen from "./screens/ClinicianScreens/ClinicianScreen";
+import NonClinicianScreen from "./screens/NonClinicianScreens/NonClinicianScreen";
+import ResultScreen from "./screens/ClinicianScreens/ResultScreen";
+import GeneralInfoScreen from "./screens/NonClinicianScreens/GeneralInfoScreen";
 
 //Redux
 import { Provider } from "react-redux";
@@ -23,7 +24,7 @@ export default function App() {
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
-              headerStyle: { backgroundColor: "#5a929e" },
+              headerStyle: { backgroundColor: "#b6c0c2" }, //#5a929e
               headerTintColor: "white",
               headerTitleAlign: "center",
               contentStyle: { backgroundColor: "#bfd4bb" }, //The actual screen of the content
@@ -36,6 +37,10 @@ export default function App() {
               component={NonClinicianScreen}
             />
             <Stack.Screen name="RiskScorePage" component={ResultScreen} />
+            <Stack.Screen
+              name="GeneralInfoScreen"
+              component={GeneralInfoScreen}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

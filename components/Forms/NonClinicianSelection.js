@@ -1,16 +1,9 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Text, StyleSheet, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import axios from "axios";
 
-function NonClinicianSelection({ children }) {
+function NonClinicianSelection({ children, onPress }) {
   return (
-    <Pressable
-      android_ripple={{ color: "gray" }}
-      style={styles.container}
-      onPress={async () => {
-        console.log("Non-Clinician Pressed");
-      }}
-    >
+    <Pressable android_ripple={{ color: "gray" }} style={styles.container}>
       <Text style={styles.text}>{children}</Text>
       <Icon name="chevron-forward-outline" size={30} color="black" />
     </Pressable>

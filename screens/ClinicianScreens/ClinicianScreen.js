@@ -13,6 +13,8 @@ import InputText from "../../components/Forms/InputText";
 import EntranceButtons from "../../UI/EntranceButtons";
 import { Alert } from "react-native";
 import axios from "axios";
+//Loading Screen
+import LoadingScreen from "../LoadingScreen";
 
 //Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -62,6 +64,8 @@ function ClinicianScreen({ navigation }) {
   const [riskPrediction, setRiskPrediction] = useState("Default");
   //Keep the ratio of the prediction
   const [riskPredictionRatios, setRiskPredictionRatios] = useState([]);
+  //When scoring we'll show the Loading Screen
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     //Update the predictionScore and predictionScoreRatios in the Redux store
@@ -73,6 +77,11 @@ function ClinicianScreen({ navigation }) {
       riskPredictionRatios[0]
     );
   }, [riskPrediction, riskPredictionRatios]);
+
+  //When page reload setIsLoading to false...
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   //We'll update inputs when some input proporties selected or entered.
   function inputChangeHandler(inputIdentifier, value) {
@@ -120,7 +129,7 @@ function ClinicianScreen({ navigation }) {
 
   //When the Calculate Risk button is clicked.
   //Here we'll first convert our entered values into proper ones and check for errors.
-  function onCalculateButtonHandler() {
+  async function onCalculateButtonHandler() {
     const submittedValues = {
       age: isNullValue(inputValues.age.value)
         ? ""
@@ -182,7 +191,7 @@ function ClinicianScreen({ navigation }) {
       isRaceValid &&
       isMorphologyValid
     ) {
-      onSubmit(
+      await onSubmit(
         submittedValues.tumor_stage,
         submittedValues.age,
         submittedValues.gender,
@@ -192,7 +201,9 @@ function ClinicianScreen({ navigation }) {
         submittedValues.site_of_resection,
         submittedValues.race
       );
+
       navigation.navigate("RiskScorePage");
+      setIsLoading(false);
     } else {
       Alert.alert("Invalid input", "Please check the inputs!");
       setInputValues((curInputValues) => {
@@ -249,6 +260,7 @@ function ClinicianScreen({ navigation }) {
     race
   ) {
     setRiskPrediction("Scoring...");
+    setIsLoading(true);
 
     try {
       //Send POST request to model
@@ -330,165 +342,169 @@ function ClinicianScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <ScrollView style={styles.scrollView}>
-          <InputSelection
-            label="Cancer Type"
-            invalid={!inputValues.cancer_type.isValid}
-            options={cancerTypes}
-            textInputConfig={{
-              titleText: "Cancer Types",
-              onValueChange: inputChangeHandler.bind(this, "cancer_type"),
-              selected: inputValues.cancer_type.value,
-              placeholder: "Select Cancer Type",
-            }}
-          />
-
-          {isCancerTypeEntered && (
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.container}
+        >
+          <ScrollView style={styles.scrollView}>
             <InputSelection
-              label="Gender"
-              invalid={!inputValues.gender.isValid}
-              options={gender}
+              label="Cancer Type"
+              invalid={!inputValues.cancer_type.isValid}
+              options={cancerTypes}
               textInputConfig={{
-                titleText: "Gender",
-                onValueChange: inputChangeHandler.bind(this, "gender"),
-                selected: inputValues.gender.value,
-                placeholder: "Select Gender",
+                titleText: "Cancer Types",
+                onValueChange: inputChangeHandler.bind(this, "cancer_type"),
+                selected: inputValues.cancer_type.value,
+                placeholder: "Select Cancer Type",
               }}
             />
-          )}
 
-          {isCancerTypeEntered && (
-            <InputText
-              label="Age"
-              invalid={!inputValues.age.isValid}
-              textInputConfig={{
-                keyboardType: "decimal-pad",
-                placeholder: "Age",
-                maxLength: 3,
-                selectionColor: "purple",
-                onChangeText: inputChangeHandler.bind(this, "age"),
-                value: inputValues.age.value,
-              }}
-            ></InputText>
-          )}
+            {isCancerTypeEntered && (
+              <InputSelection
+                label="Gender"
+                invalid={!inputValues.gender.isValid}
+                options={gender}
+                textInputConfig={{
+                  titleText: "Gender",
+                  onValueChange: inputChangeHandler.bind(this, "gender"),
+                  selected: inputValues.gender.value,
+                  placeholder: "Select Gender",
+                }}
+              />
+            )}
 
-          {isCancerLUSC && (
-            <InputText
-              label="Cigarettes Per Day"
-              invalid={!inputValues.cigarettes_per_day.isValid}
-              textInputConfig={{
-                keyboardType: "decimal-pad",
-                placeholder: "Cigarettes smoked per day...",
-                maxLength: 5,
-                selectionColor: "purple",
-                onChangeText: inputChangeHandler.bind(
-                  this,
-                  "cigarettes_per_day"
-                ),
-                value: inputValues.cigarettes_per_day.value,
-              }}
-            ></InputText>
-          )}
+            {isCancerTypeEntered && (
+              <InputText
+                label="Age"
+                invalid={!inputValues.age.isValid}
+                textInputConfig={{
+                  keyboardType: "decimal-pad",
+                  placeholder: "Age",
+                  maxLength: 3,
+                  selectionColor: "purple",
+                  onChangeText: inputChangeHandler.bind(this, "age"),
+                  value: inputValues.age.value,
+                }}
+              ></InputText>
+            )}
 
-          {isCancerLUAD && (
-            <InputSelection
-              label="Race"
-              invalid={!inputValues.race.isValid}
-              options={race_luad}
-              textInputConfig={{
-                titleText: "Race",
-                onValueChange: inputChangeHandler.bind(this, "race"),
-                selected: inputValues.race.value,
-                placeholder: "Select Race",
-              }}
-            />
-          )}
+            {isCancerLUSC && (
+              <InputText
+                label="Cigarettes Per Day"
+                invalid={!inputValues.cigarettes_per_day.isValid}
+                textInputConfig={{
+                  keyboardType: "decimal-pad",
+                  placeholder: "Cigarettes smoked per day...",
+                  maxLength: 5,
+                  selectionColor: "purple",
+                  onChangeText: inputChangeHandler.bind(
+                    this,
+                    "cigarettes_per_day"
+                  ),
+                  value: inputValues.cigarettes_per_day.value,
+                }}
+              ></InputText>
+            )}
 
-          {isCancerTypeEntered && (
-            <InputSelection
-              label="Tumor Stage"
-              options={tumor_stage}
-              invalid={!inputValues.tumor_stage.isValid}
-              textInputConfig={{
-                titleText: "Tumor Stage",
-                onValueChange: inputChangeHandler.bind(this, "tumor_stage"),
-                selected: inputValues.tumor_stage.value,
-                placeholder: "Select Tumor Stage",
-              }}
-            ></InputSelection>
-          )}
+            {isCancerLUAD && (
+              <InputSelection
+                label="Race"
+                invalid={!inputValues.race.isValid}
+                options={race_luad}
+                textInputConfig={{
+                  titleText: "Race",
+                  onValueChange: inputChangeHandler.bind(this, "race"),
+                  selected: inputValues.race.value,
+                  placeholder: "Select Race",
+                }}
+              />
+            )}
 
-          {isCancerTypeEntered && (
-            <InputSelection
-              label="Site of Resection or Biopsy"
-              invalid={!inputValues.site_of_resection.isValid}
-              options={site_of_resection}
-              textInputConfig={{
-                titleText: "Site of Resection or Biopsy",
-                onValueChange: inputChangeHandler.bind(
-                  this,
-                  "site_of_resection"
-                ),
-                selected: inputValues.site_of_resection.value,
-                placeholder: "Select Site of Resection or Biopsy",
-              }}
-            />
-          )}
+            {isCancerTypeEntered && (
+              <InputSelection
+                label="Tumor Stage"
+                options={tumor_stage}
+                invalid={!inputValues.tumor_stage.isValid}
+                textInputConfig={{
+                  titleText: "Tumor Stage",
+                  onValueChange: inputChangeHandler.bind(this, "tumor_stage"),
+                  selected: inputValues.tumor_stage.value,
+                  placeholder: "Select Tumor Stage",
+                }}
+              ></InputSelection>
+            )}
 
-          {isCancerTypeEntered && (
-            <InputSelection
-              label="Primary Diagnosis"
-              invalid={!inputValues.primary_diagnosis.isValid}
-              options={
-                isCancerLUAD ? primary_diagnosis_luad : primary_diagnosis_lusc
-              }
-              textInputConfig={{
-                titleText: "Primary Diagnosis",
-                onValueChange: inputChangeHandler.bind(
-                  this,
-                  "primary_diagnosis"
-                ),
-                selected: inputValues.primary_diagnosis.value,
-                placeholder: "Select Primary Diagnosis",
-              }}
-            />
-          )}
+            {isCancerTypeEntered && (
+              <InputSelection
+                label="Site of Resection or Biopsy"
+                invalid={!inputValues.site_of_resection.isValid}
+                options={site_of_resection}
+                textInputConfig={{
+                  titleText: "Site of Resection or Biopsy",
+                  onValueChange: inputChangeHandler.bind(
+                    this,
+                    "site_of_resection"
+                  ),
+                  selected: inputValues.site_of_resection.value,
+                  placeholder: "Select Site of Resection or Biopsy",
+                }}
+              />
+            )}
 
-          {isCancerTypeEntered && (
-            <InputSelection
-              label="Histology Code"
-              invalid={!inputValues.morphology.isValid}
-              options={isCancerLUAD ? morphology_luad : morphology_lusc}
-              textInputConfig={{
-                titleText: "Histology Code",
-                onValueChange: inputChangeHandler.bind(this, "morphology"),
-                selected: inputValues.morphology.value,
-                placeholder: "Select Histology Code",
-              }}
-            />
-          )}
+            {isCancerTypeEntered && (
+              <InputSelection
+                label="Primary Diagnosis"
+                invalid={!inputValues.primary_diagnosis.isValid}
+                options={
+                  isCancerLUAD ? primary_diagnosis_luad : primary_diagnosis_lusc
+                }
+                textInputConfig={{
+                  titleText: "Primary Diagnosis",
+                  onValueChange: inputChangeHandler.bind(
+                    this,
+                    "primary_diagnosis"
+                  ),
+                  selected: inputValues.primary_diagnosis.value,
+                  placeholder: "Select Primary Diagnosis",
+                }}
+              />
+            )}
 
-          {/* Error Text if Form is Invalid */}
-          {!isFormValid && (
-            <Text style={styles.errorText}>
-              Invalid Input Values - Please check your inputs!
-            </Text>
-          )}
+            {isCancerTypeEntered && (
+              <InputSelection
+                label="Histology Code"
+                invalid={!inputValues.morphology.isValid}
+                options={isCancerLUAD ? morphology_luad : morphology_lusc}
+                textInputConfig={{
+                  titleText: "Histology Code",
+                  onValueChange: inputChangeHandler.bind(this, "morphology"),
+                  selected: inputValues.morphology.value,
+                  placeholder: "Select Histology Code",
+                }}
+              />
+            )}
 
-          <View style={styles.buttonContainer}>
-            <EntranceButtons
-              style={styles.calculateButton}
-              onPress={onCalculateButtonHandler}
-            >
-              Calculate Risk
-            </EntranceButtons>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            {/* Error Text if Form is Invalid */}
+            {!isFormValid && (
+              <Text style={styles.errorText}>
+                Invalid Input Values - Please check your inputs!
+              </Text>
+            )}
+
+            <View style={styles.buttonContainer}>
+              <EntranceButtons
+                style={styles.calculateButton}
+                onPress={onCalculateButtonHandler}
+              >
+                Calculate Risk
+              </EntranceButtons>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      )}
     </View>
   );
 }

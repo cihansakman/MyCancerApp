@@ -1,6 +1,7 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 
 import EntranceButtons from "../UI/EntranceButtons";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 function HomeScreen({ navigation, route }) {
   console.log("Home Screen");
@@ -15,11 +16,11 @@ function HomeScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-      <EntranceButtons onPress={clinicianOnPressHandler}>
-        Clinician Entrance
+      <EntranceButtons onPress={clinicianOnPressHandler} iconName="user-md">
+        Clinician
       </EntranceButtons>
-      <EntranceButtons onPress={nonClinicianOnPressHandler}>
-        Non-Clinician Entrance
+      <EntranceButtons onPress={nonClinicianOnPressHandler} iconName="user-alt">
+        Non-Clinician
       </EntranceButtons>
     </View>
   );

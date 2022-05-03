@@ -8,8 +8,9 @@ export default Header;
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 24,
+    fontSize: 28,
     fontStyle: "normal",
-    fontWeight: "500",
+    fontWeight: "700",
+    color: "#353030",
   },
 });

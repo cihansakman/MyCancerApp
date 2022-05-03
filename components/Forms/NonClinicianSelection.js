@@ -1,16 +1,17 @@
-import { Text, StyleSheet, Pressable } from "react-native";
+import { Text, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 function NonClinicianSelection({ children, onPress }) {
   return (
-    <Pressable
-      onPress={onPress}
+    <TouchableOpacity
+      activeOpacity={0.3}
       android_ripple={{ color: "gray" }}
+      onPress={onPress}
       style={styles.container}
     >
       <Text style={styles.text}>{children}</Text>
       <Icon name="chevron-forward-outline" size={30} color="black" />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 

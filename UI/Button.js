@@ -1,28 +1,17 @@
 import { Text, Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import { Fontisto } from "@expo/vector-icons";
-import Icon from "react-native-vector-icons/FontAwesome5";
-function EntranceButtons({ children, onPress, style, iconName }) {
+function Button({ children, onPress, style, iconName }) {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={onPress}
       style={[styles.appButtonContainer, style]}
     >
-      {iconName && (
-        <Icon
-          name={iconName}
-          size={28}
-          color="#e5e5e5"
-          style={{ paddingLeft: 15 }}
-        />
-      )}
-
       <Text style={styles.appButtonText}>{children}</Text>
     </TouchableOpacity>
   );
 }
 
-export default EntranceButtons;
+export default Button;
 
 const styles = StyleSheet.create({
   appButtonContainer: {

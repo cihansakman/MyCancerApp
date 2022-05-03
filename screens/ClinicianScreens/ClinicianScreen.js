@@ -23,6 +23,7 @@ import {
   setPrediction,
   setPredictionScores,
 } from "../../store/redux/predictions";
+import Button from "../../UI/Button";
 
 const utils = require("../../utils");
 
@@ -495,12 +496,12 @@ function ClinicianScreen({ navigation }) {
             )}
 
             <View style={styles.buttonContainer}>
-              <EntranceButtons
+              <Button
                 style={styles.calculateButton}
                 onPress={onCalculateButtonHandler}
               >
-                Calculate Risk
-              </EntranceButtons>
+                Predict Risk
+              </Button>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
@@ -541,6 +542,7 @@ const styles = StyleSheet.create({
   },
   calculateButton: {
     width: "50%",
+    alignSelf: "center",
   },
   imageContainer: {
     borderRadius: deviceWidth < 380 ? 150 : 100,

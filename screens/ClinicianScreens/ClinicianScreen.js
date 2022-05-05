@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import InputSelection from "../../components/Forms/InputSelection";
 import InputText from "../../components/Forms/InputText";
-import EntranceButtons from "../../UI/EntranceButtons";
 import { Alert } from "react-native";
 import axios from "axios";
 //Loading Screen
@@ -67,6 +66,8 @@ function ClinicianScreen({ navigation }) {
   const [riskPredictionRatios, setRiskPredictionRatios] = useState([]);
   //When scoring we'll show the Loading Screen
   const [isLoading, setIsLoading] = useState(false);
+  //When cancer type change scoringURL is going to change too
+  const [scoringURL, setScoringURL] = useState("");
 
   useEffect(() => {
     //Update the predictionScore and predictionScoreRatios in the Redux store
@@ -83,6 +84,21 @@ function ClinicianScreen({ navigation }) {
   useEffect(() => {
     setIsLoading(false);
   }, []);
+
+  //When Cancer Type changed, set the scoring URL
+  useEffect(() => {
+    console.log("Cancer Type", inputValues.cancer_type.value);
+    //If cancer type is LUAD
+    if (inputValues.cancer_type.value === "Lung Adenocarcinoma") {
+      setScoringURL("http://192.168.1.205:5000/api/wml/score/");
+      console.log("Scoring URL", scoringURL);
+    } else if (
+      inputValues.cancer_type.value === "Lung Squamos Cell Carcinoma"
+    ) {
+      setScoringURL("http://192.168.1.205:5000/api/luscClinicalWml/score");
+      console.log("Scoring URL", scoringURL);
+    }
+  }, [inputValues.cancer_type.value, scoringURL]);
 
   //We'll update inputs when some input proporties selected or entered.
   function inputChangeHandler(inputIdentifier, value) {
@@ -200,7 +216,8 @@ function ClinicianScreen({ navigation }) {
         submittedValues.primary_diagnosis,
         submittedValues.morphology,
         submittedValues.site_of_resection,
-        submittedValues.race
+        submittedValues.race,
+        submittedValues.cigarettes_per_day
       );
 
       navigation.navigate("RiskScorePage");
@@ -258,7 +275,8 @@ function ClinicianScreen({ navigation }) {
     primary_diagnosis,
     morphology,
     site_of_resection_or_biopsy,
-    race
+    race,
+    cigarettes_per_day
   ) {
     setRiskPrediction("Scoring...");
     setIsLoading(true);
@@ -266,7 +284,7 @@ function ClinicianScreen({ navigation }) {
     try {
       //Send POST request to model
       await axios
-        .post("http://192.168.1.205:5000/api/wml/score/", {
+        .post(scoringURL, {
           tumor_stage: tumor_stage,
           age_at_diagnosis: age,
           days_to_birth: -age,
@@ -276,6 +294,7 @@ function ClinicianScreen({ navigation }) {
           morphology: morphology,
           site_of_resection_or_biopsy: site_of_resection_or_biopsy,
           race: race,
+          cigarettes_per_day: cigarettes_per_day,
         })
         .then((res) => {
           //Set Risk Prediction as 0 High Risk, 1 Low Risk

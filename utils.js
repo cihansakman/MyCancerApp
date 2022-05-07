@@ -57,3 +57,11 @@ export const race_luad = [
   "Black or African American",
   "White",
 ];
+
+//Min and Max values from dataset
+export const minCigarettesPerDay = 0;
+export const maxCigarettesPerDay = 15;
+
+//Min-Max age LUAD 33-88, LUSC 39-90
+export const minAge = 35;
+export const maxAge = 90;

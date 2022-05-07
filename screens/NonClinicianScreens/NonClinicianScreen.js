@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
 import NonClinicianSelection from "../../components/Forms/NonClinicianSelection";
-import Header from "../../UI/Header";
 import { Linking } from "react-native";
 
 function NonClinicianScreen({ navigation }) {
@@ -25,6 +24,10 @@ function NonClinicianScreen({ navigation }) {
       <NonClinicianSelection onPress={cancerSupportHandler}>
         Cancer Support Page
       </NonClinicianSelection>
+
+      <View>
+        <Text>Slide value: {value}</Text>
+      </View>
     </View>
   );
 }
@@ -48,5 +51,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  sliderStyle: {
+    width: "100%",
   },
 });

@@ -23,6 +23,7 @@ import {
   setPredictionScores,
 } from "../../store/redux/predictions";
 import Button from "../../UI/Button";
+import InputSlider from "../../components/Forms/InputSlider";
 
 const utils = require("../../utils");
 
@@ -41,13 +42,11 @@ function ClinicianScreen({ navigation }) {
   //Get the prediction from store.
   const prediction = useSelector((state) => state.predictions.predictionRisk);
 
-  console.log("Clinician Screen", prediction);
-
   //We'll keep all inputs into one object and update them with only one handler function.
   //We'll keep each input as an object such as the value of input and the info about if the input is valid or not(validation is important for the error messages)
   const [inputValues, setInputValues] = useState({
-    age: { value: "", isValid: true },
-    cigarettes_per_day: { value: "", isValid: true },
+    age: { value: 0, isValid: true },
+    cigarettes_per_day: { value: 0, isValid: true },
     tumor_stage: { value: "", isValid: true },
     cancer_type: { value: "", isValid: true },
     gender: { value: "", isValid: true },
@@ -73,11 +72,6 @@ function ClinicianScreen({ navigation }) {
     //Update the predictionScore and predictionScoreRatios in the Redux store
     dispatch(setPrediction({ predictionRisk: riskPrediction }));
     dispatch(setPredictionScores({ predictionScores: riskPredictionRatios }));
-    console.log(
-      "Use Effect activated\n",
-      riskPrediction,
-      riskPredictionRatios[0]
-    );
   }, [riskPrediction, riskPredictionRatios]);
 
   //When page reload setIsLoading to false...
@@ -87,7 +81,6 @@ function ClinicianScreen({ navigation }) {
 
   //When Cancer Type changed, set the scoring URL
   useEffect(() => {
-    console.log("Cancer Type", inputValues.cancer_type.value);
     //If cancer type is LUAD
     if (inputValues.cancer_type.value === "Lung Adenocarcinoma") {
       setScoringURL("http://192.168.1.205:5000/api/wml/score/");
@@ -106,7 +99,7 @@ function ClinicianScreen({ navigation }) {
       setInputValues((curInputValues) => {
         return {
           ...curInputValues,
-          ["cigarettes_per_day"]: { value: "", isValid: true },
+          ["cigarettes_per_day"]: { value: 0, isValid: true },
           ["primary_diagnosis"]: { value: "", isValid: true },
           ["morphology"]: { value: "", isValid: true },
           ["race"]: { value: "Other", isValid: true },
@@ -149,10 +142,10 @@ function ClinicianScreen({ navigation }) {
   async function onCalculateButtonHandler() {
     const submittedValues = {
       age: isNullValue(inputValues.age.value)
-        ? ""
+        ? 0
         : parseInt(inputValues.age.value) * 365, //Age in days
       cigarettes_per_day: isNullValue(inputValues.cigarettes_per_day.value)
-        ? ""
+        ? 0
         : parseInt(inputValues.cigarettes_per_day.value),
       tumor_stage: parseInt(inputValues.tumor_stage.value),
       cancer_type:
@@ -184,7 +177,7 @@ function ClinicianScreen({ navigation }) {
     const isCigarettesPerDayValid =
       isNullValue(submittedValues.cigarettes_per_day) ||
       (!isNaN(submittedValues.cigarettes_per_day) &&
-        submittedValues.cigarettes_per_day > 0); //Can be empty
+        submittedValues.cigarettes_per_day >= 0); //Can be empty
     const isTumorStageValid = submittedValues.tumor_stage > 0;
     const isCancerTypeValid = !isNullValue(submittedValues.cancer_type);
     const isGenderValid = !isNullValue(submittedValues.gender);
@@ -309,9 +302,9 @@ function ClinicianScreen({ navigation }) {
           //Clear the inputs
           setInputValues((curInputValues) => {
             return {
-              age: { value: "", isValid: true },
+              age: { value: 0, isValid: true },
               cigarettes_per_day: {
-                value: "",
+                value: 0,
                 isValid: true,
               },
 
@@ -397,36 +390,34 @@ function ClinicianScreen({ navigation }) {
             )}
 
             {isCancerTypeEntered && (
-              <InputText
+              <InputSlider
                 label="Age"
                 invalid={!inputValues.age.isValid}
+                value={inputValues.age.value}
+                min={utils.minAge}
+                max={utils.maxAge}
                 textInputConfig={{
-                  keyboardType: "decimal-pad",
-                  placeholder: "Age",
-                  maxLength: 3,
-                  selectionColor: "purple",
-                  onChangeText: inputChangeHandler.bind(this, "age"),
+                  onValueChange: inputChangeHandler.bind(this, "age"),
                   value: inputValues.age.value,
                 }}
-              ></InputText>
+              ></InputSlider>
             )}
 
             {isCancerLUSC && (
-              <InputText
+              <InputSlider
                 label="Cigarettes Per Day"
                 invalid={!inputValues.cigarettes_per_day.isValid}
+                value={inputValues.cigarettes_per_day.value}
+                min={utils.minCigarettesPerDay}
+                max={utils.maxCigarettesPerDay}
                 textInputConfig={{
-                  keyboardType: "decimal-pad",
-                  placeholder: "Cigarettes smoked per day...",
-                  maxLength: 5,
-                  selectionColor: "purple",
-                  onChangeText: inputChangeHandler.bind(
+                  onValueChange: inputChangeHandler.bind(
                     this,
                     "cigarettes_per_day"
                   ),
                   value: inputValues.cigarettes_per_day.value,
                 }}
-              ></InputText>
+              ></InputSlider>
             )}
 
             {isCancerLUAD && (
@@ -535,9 +526,6 @@ const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
     padding: 12,
-
-    //backgroundColor: "#eaeaea",
-    // backgroundColor: "#eee4bf",
   },
   container: {
     flex: 1,

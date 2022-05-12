@@ -1,7 +1,14 @@
 import { View, Text, StyleSheet } from "react-native";
 import SelectPicker from "react-native-form-select-picker"; // Import the package
 
-function InputSelection({ label, invalid, textInputConfig, options }) {
+function InputSelection({
+  label,
+  invalid,
+  textInputConfig,
+  options,
+  extraStyle,
+  key,
+}) {
   return (
     <View style={styles.inputContainer}>
       <View style={styles.flex1}></View>
@@ -13,19 +20,19 @@ function InputSelection({ label, invalid, textInputConfig, options }) {
         </Text>
 
         <SelectPicker
-          {...textInputConfig}
           doneButtonTextStyle={{
             color: "white",
           }}
           doneButtonText="Done"
-          style={{
-            backgroundColor: invalid ? "#ec7d7d" : "#44a909ff",
-            // backgroundColor: invalid ? "#ec7d7d" : "#2b80c5",
-            padding: 8,
-            borderRadius: 4,
-
-            alignItems: "center",
-          }}
+          style={[
+            {
+              backgroundColor: invalid ? "#f54e4e" : "#44a909ff",
+              padding: 8,
+              borderRadius: 4,
+              alignItems: "center",
+            },
+            extraStyle,
+          ]}
           containerStyle={{
             backgroundColor: "#a5cff2",
           }}
@@ -46,9 +53,10 @@ function InputSelection({ label, invalid, textInputConfig, options }) {
             color: "#191511",
             fontSize: 15,
           }}
+          {...textInputConfig}
         >
           {options.map((val) => (
-            <SelectPicker.Item label={val} value={val} key={label + val} />
+            <SelectPicker.Item label={val} value={val} key={key} />
           ))}
         </SelectPicker>
       </View>

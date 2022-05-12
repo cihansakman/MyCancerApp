@@ -12,6 +12,8 @@ import TreatmentMethodsScreen from "./screens/NonClinicianScreens/TreatmentMetho
 //Redux
 import { Provider } from "react-redux";
 import { store } from "./store/redux/store";
+import GeneticClinicianScreen from "./screens/ClinicianScreens/GeneticClinicanScreen";
+import ToolsScreen from "./screens/ToolsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,17 +27,33 @@ export default function App() {
             initialRouteName="Home"
             screenOptions={{
               headerStyle: { backgroundColor: "#f6fbfc" }, //#5a929e
-              headerTintColor: "#44a909ff",
+              headerTintColor: "#009688",
               headerTitleAlign: "center",
               contentStyle: { backgroundColor: "#bfd4bb" }, //The actual screen of the content
             }}
           >
             <Stack.Screen name="Home" component={HomeScreen} />
+            {/* There will be two different Tools, Genetic Tools, Clinical Tools */}
+            <Stack.Screen
+              name="ToolsScreen"
+              component={ToolsScreen}
+              options={{
+                title: "Cancer Prediction Tools",
+              }}
+            />
+
             <Stack.Screen
               name="ClinicianScreen"
               component={ClinicianScreen}
               options={{
-                title: "Prediction Tool",
+                title: "Clinical Prediction Tool",
+              }}
+            />
+            <Stack.Screen
+              name="GeneticClinicanScreen"
+              component={GeneticClinicianScreen}
+              options={{
+                title: "Genetic Prediction Tool",
               }}
             />
             <Stack.Screen

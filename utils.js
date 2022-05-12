@@ -65,3 +65,91 @@ export const maxCigarettesPerDay = 15;
 //Min-Max age LUAD 33-88, LUSC 39-90
 export const minAge = 35;
 export const maxAge = 90;
+
+//Top 10 Genes of LUAD
+export const luad10Genes = [
+  {
+    item: "CDH10",
+    id: "CDH10",
+  },
+  {
+    item: "COL11A1",
+    id: "COL11A1",
+  },
+  {
+    item: "CSMD3",
+    id: "CSMD3",
+  },
+  {
+    item: "HMCN1",
+    id: "HMCN1",
+  },
+  {
+    item: "KEAP1",
+    id: "KEAP1",
+  },
+  {
+    item: "KRAS",
+    id: "KRAS",
+  },
+  {
+    item: "LRP1B",
+    id: "LRP1B",
+  },
+  {
+    item: "SPTA1",
+    id: "SPTA1",
+  },
+  {
+    item: "TP53",
+    id: "TP53",
+  },
+  {
+    item: "USH2A",
+    id: "USH2A",
+  },
+];
+
+//Top 10 Genes of LUSC
+export const lusc10Genes = [
+  {
+    item: "CDKN2A",
+    id: "CDKN2A",
+  },
+  {
+    item: "CSMD3",
+    id: "CSMD3",
+  },
+  {
+    item: "FAT1",
+    id: "FAT1",
+  },
+  {
+    item: "KEAP1",
+    id: "KEAP1",
+  },
+  {
+    item: "KMT2C",
+    id: "KMT2C",
+  },
+  {
+    item: "KMT2D",
+    id: "KMT2D",
+  },
+  {
+    item: "NF1",
+    id: "NF1",
+  },
+  {
+    item: "NFE2L2",
+    id: "NFE2L2",
+  },
+  {
+    item: "PIK3CA",
+    id: "PIK3CA",
+  },
+  {
+    item: "TP53",
+    id: "TP53",
+  },
+];

@@ -1,5 +1,4 @@
 import { Text, Pressable, StyleSheet, TouchableOpacity } from "react-native";
-import { Fontisto } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome5";
 function EntranceButtons({ children, onPress, style, iconName }) {
   return (

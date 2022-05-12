@@ -1,13 +1,12 @@
 import { View, StyleSheet, Pressable } from "react-native";
 
 import EntranceButtons from "../UI/EntranceButtons";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 function HomeScreen({ navigation, route }) {
   console.log("Home Screen");
 
   const clinicianOnPressHandler = () => {
-    navigation.navigate("ClinicianScreen");
+    navigation.navigate("ToolsScreen");
   };
 
   const nonClinicianOnPressHandler = () => {

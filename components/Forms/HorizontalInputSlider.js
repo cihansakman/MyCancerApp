@@ -1,7 +1,15 @@
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
 
-function InputSlider({ value, min, max, label, invalid, textInputConfig }) {
+function HorizontalInputSlider({
+  value,
+  min,
+  max,
+  label,
+  invalid,
+  extraStyle,
+  textInputConfig,
+}) {
   return (
     <View style={styles.inputContainer}>
       <View style={styles.flex1}></View>
@@ -11,14 +19,14 @@ function InputSlider({ value, min, max, label, invalid, textInputConfig }) {
           {label}
         </Text>
         <Slider
-          style={[styles.input, invalid && styles.invalidInput]}
-          {...textInputConfig}
+          style={[styles.input, invalid && styles.invalidInput, extraStyle]}
           step={1}
           minimumValue={min}
           maximumValue={max}
           minimumTrackTintColor="#1fb28a"
           maximumTrackTintColor="#d3d3d3"
           thumbTintColor="#b9e4c9"
+          {...textInputConfig}
         />
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Text style={{ fontSize: 16 }}>{value}</Text>
@@ -30,7 +38,7 @@ function InputSlider({ value, min, max, label, invalid, textInputConfig }) {
   );
 }
 
-export default InputSlider;
+export default HorizontalInputSlider;
 
 const styles = StyleSheet.create({
   inputContainer: {

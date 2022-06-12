@@ -89,12 +89,12 @@ function ClinicianScreen({ navigation }) {
   useEffect(() => {
     //If cancer type is LUAD
     if (inputValues.cancer_type.value === "Lung Adenocarcinoma") {
-      setScoringURL("http://192.168.1.205:5000/api/wml/score/");
+      setScoringURL("http://172.20.10.3:5000/api/wml/score/");
       console.log("Scoring URL", scoringURL);
     } else if (
       inputValues.cancer_type.value === "Lung Squamos Cell Carcinoma"
     ) {
-      setScoringURL("http://192.168.1.205:5000/api/luscClinicalWml/score");
+      setScoringURL("http://172.20.10.3:5000/api/luscClinicalWml/score");
       console.log("Scoring URL", scoringURL);
     }
   }, [inputValues.cancer_type.value, scoringURL]);

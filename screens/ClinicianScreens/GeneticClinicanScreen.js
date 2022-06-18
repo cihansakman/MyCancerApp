@@ -134,11 +134,11 @@ function GeneticClinicianScreen({ navigation }) {
     setSelectedGenes([]);
     //If cancer type is LUAD
     if (inputValues.cancer_type.value === "Lung Adenocarcinoma") {
-      setScoringURL("http://172.20.10.3:5000/api/luadGeneticWml/score/");
+      setScoringURL("http://192.168.1.205:5000/api/luadGeneticWml/score/");
     } else if (
       inputValues.cancer_type.value === "Lung Squamos Cell Carcinoma"
     ) {
-      setScoringURL("http://172.20.10.3:5000/api/luscGeneticWml/score");
+      setScoringURL("http://192.168.1.205:5000/api/luscGeneticWml/score");
     }
   }, [inputValues.cancer_type.value, scoringURL]);
 
